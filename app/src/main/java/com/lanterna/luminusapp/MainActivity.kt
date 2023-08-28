@@ -1,9 +1,10 @@
 package com.lanterna.luminusapp
 
+import android.hardware.camera2.CameraManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.LayoutInflater
 import com.lanterna.luminusapp.databinding.ActivityMainBinding
+import java.lang.Exception
 
 class MainActivity : AppCompatActivity() {
 
@@ -17,13 +18,32 @@ class MainActivity : AppCompatActivity() {
         binding.lanterna.setOnClickListener {
 
             if(!estado) {
-                //setImage para alterar a imagem da lanterna
+                //setImage Change Img
                 binding.lanterna.setImageResource(R.drawable.ic_lanterna_ligada)
                 estado = true
+                lightLanterna(estado)
             } else {
                 binding.lanterna.setImageResource(R.drawable.ic_lanterna_desligada)
                 estado = false
+                lightLanterna(estado)
             }
         }
+    }
+
+    private fun lightLanterna(estado: Boolean) {
+
+        //Herdando o serviço de camera
+        val camManager: CameraManager = getSystemService(CAMERA_SERVICE) as CameraManager
+        //Representar camera frontal ou trazeira
+        val cameraId: String?
+
+        try {
+            //Trazeira: 0 Frontal: 1
+            cameraId = camManager.cameraIdList[0]
+            camManager.setTorchMode(cameraId, estado)
+        }catch (e: Exception) {
+
+        }
+
     }
 }
